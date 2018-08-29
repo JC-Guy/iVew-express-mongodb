@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user')
+// var db=require('../public/javascripts/db')
 //login
 router.post('/login', function (req, res) {
   if (!req.body.username || !req.body.password) {

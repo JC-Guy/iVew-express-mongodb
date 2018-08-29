@@ -1,6 +1,7 @@
 <template>
-  <div style="width:300px;margin-left:300px">
-    <Form ref="registerForm" :model="user" :rules="ruleInline">
+  <Card style="width:300px;margin-left:39%;margin-top:13%;text-align:center">
+    <h2 style="text-align:center;margin-bottom:20px">Register</h2>
+    <Form ref="registerForm" :model="user" :rules="rules">
       <FormItem prop="username">
         <Input type="text" v-model="user.username" placeholder="Username">
         <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -17,24 +18,26 @@
         </Input>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="register">register</Button>
+        <Button type="success" ghost @click="register">完成</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <Button type="primary" ghost @click="goback">返回</Button>
       </FormItem>
     </Form>
-  </div>
+  </Card>
 </template>
 <script>
 export default {
   data() {
     return {
       user: {},
-      ruleInline: {
+      rules: {
         username: [
           { required: true, message: '用户名不能为空', trigger: 'blur' },
-          { type: 'string', min: 1, message: '用户名不能少于1位', trigger: 'blur' }
+          { type: 'string', min: 6, message: '用户名不能少于6位', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
-          { type: 'string', min: 1, message: '密码不能少于1位', trigger: 'blur' }
+          { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
         ],
         conform: { required: true, message: '两次输入的密码不一致', trigger: 'blur' }
       }
@@ -79,9 +82,9 @@ export default {
                         title: '注册成功，欢迎你--' + this.user.username,
                         duration: 2
                       })
-                   
+
                       // console.log(document.cookie)
-                      this.$router.replace('/login')
+                      this.$router.replace('/')
                       this.$store.state.doneOrNot = 1
                       console.log("前端:注册成功")
                       console.log(res.data)
@@ -122,7 +125,7 @@ export default {
     },
     goback() {
       this.$router.replace('/')
-    },
+    }
 
 
   }

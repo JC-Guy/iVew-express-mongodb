@@ -1,20 +1,12 @@
 <style scoped>
+
 .layout {
-  border: 1px solid #d7dde4;
+
   position: relative;
-  border-radius: 4px;
+
   overflow: hidden;
 }
-.layout-logo {
-  width: 100px;
-  height: 30px;
-  background: #bdbdbd;
-  border-radius: 3px;
-  float: left;
-  position: relative;
-  top: 15px;
-  left: 20px;
-}
+
 .layout-nav {
   width: 800px;
   margin: 5px auto;
@@ -23,11 +15,22 @@
 .layout-footer-center {
   text-align: center;
 }
+.layout-logo{
+    width: 130px;
+    height: 50px;
+    background: #5b6270;
+    border-radius: 3px;
+    float: left;
+    position: relative;
+    top: 5px;
+    left: 20px;
+}
 #header {
-  background-color: white;
+  background-color: #fff; 
+  position: relative;
 }
 #bgcolor {
-  background-color: #eeeeee;
+  background-color: #fff;
 }
 #content_container {
   -webkit-border-radius: 6px;
@@ -36,24 +39,35 @@
 #content {
   background-color: #fff;
 }
+#leftSider{
+  width: 240px;
+  background-color: #fff;
+}
 </style>
 <template>
-  <div class="layout">
-    <Layout>
-      <Header id="header">
-        <Menu mode="horizontal" theme="light" active-name="1">
-          <div class="layout-logo" @click="home">
-            首页
-          </div>
+  <div class="layout" >
+    <Layout >
+      <Header id="header" v-if="sshow!=0">
+        <Menu mode="horizontal" theme="light" width="auto">
+          <a href="/"><img src="./assets/iview.png" alt="iviewLogo" class="layout-logo"></a>
           <div class="layout-nav">
-
-            <MenuItem name="1">
-            <Icon type="ios-navigate"></Icon>
-            Item 1
-            </MenuItem>
+            <Submenu name="1">
+              <template slot="title">
+                <Icon type="ios-stats" /> Act1
+              </template>
+              <MenuGroup title="使用">
+                <MenuItem name="3-1">新增和启动</MenuItem>
+                <MenuItem name="3-2">活跃分析</MenuItem>
+                <MenuItem name="3-3">时段分析</MenuItem>
+              </MenuGroup>
+              <MenuGroup title="留存">
+                <MenuItem name="3-4">用户留存</MenuItem>
+                <MenuItem name="3-5">流失用户</MenuItem>
+              </MenuGroup>
+            </Submenu>
             <MenuItem name="2">
             <Icon type="ios-keypad"></Icon>
-            Item 2
+            Act2
             </MenuItem>
             <MenuItem name="3">
             <Icon type="ios-analytics"></Icon>
@@ -67,61 +81,68 @@
               <Icon type="ios-paper"></Icon>
               Item 5
             </Menu-Item>
-            <Button @click="login">登陆</Button>
-            <Button @click="register">注册</Button>
-
-            <Avatar>USER</Avatar>
-
+            <span v-if="user!=null && this.$store.state.doneOrNot==1">
+              <!-- vuex只能管理components下的组件，不能管理App.vue -->
+              <!-- welcome {{user.username}} -->
+              <Button @click="logout" shape="circle">注销</Button>
+            </span>
+            <span v-else>
+              <Button @click="login">登陆</Button>
+              <Button @click="register">注册</Button>
+            </span>
           </div>
-
         </Menu>
       </Header>
+      <Carousel autoplay loop :autoplay-speed="4000" :height="400" v-if="sshow!=0">
+        <CarouselItem>
+          <div class="demo-carousel">
+            <img src="./assets/1.jpg" alt="轮播第一张图">
+          </div>
+        </CarouselItem>
+        <CarouselItem>
+          <div class="demo-carousel">
+            <img src="./assets/timg.jpg" alt="轮播第二张图">
+          </div>
+        </CarouselItem>
+        <CarouselItem>
+          <div class="demo-carousel">
+            <img src="./assets/1.jpg" alt="轮播第三张图">
+          </div>
+        </CarouselItem>
+        <CarouselItem>
+          <div class="demo-carousel">
+            <img src="./assets/1.jpg" alt="轮播第四张图">
+          </div>
+        </CarouselItem>
+      </Carousel>
       <Layout id="bgcolor" :style="{padding: '0 50px'}">
-        <!-- 轮播 -->
-        <Carousel autoplay v-model="value2" loop :autoplay-speed="4000" >
-          <CarouselItem>
-            <div class="demo-carousel">
-              <img src="./assets/1.jpg" alt="轮播第一张图">
-            </div>
-          </CarouselItem>
-          <CarouselItem>
-            <div class="demo-carousel">
-              <img src="./assets/1.jpg" alt="轮播第二张图">
-            </div>
-          </CarouselItem>
-          <CarouselItem>
-            <div class="demo-carousel">
-              <img src="./assets/1.jpg" alt="轮播第三张图">
-            </div>
-          </CarouselItem>
-          <CarouselItem>
-            <div class="demo-carousel">
-              <img src="./assets/1.jpg" alt="轮播第四张图">
-            </div>
-          </CarouselItem>
-        </Carousel>
-        <Breadcrumb :style="{margin: '16px 0'}">
+        <Breadcrumb :style="{margin: '16px 0'}" v-if="sshow!=0">
           <BreadcrumbItem>Home</BreadcrumbItem>
           <BreadcrumbItem>Components</BreadcrumbItem>
           <BreadcrumbItem>Layout</BreadcrumbItem>
         </Breadcrumb>
         <Content id="content_container" :style="{padding: '24px 0', minHeight: '280px'}">
           <Layout>
-            <Sider hide-trigger :style="{background: '#fff'}">
-              <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']">
+            <Sider hide-trigger :style="{background: '#fff'}" v-if="sshow!=0">
+              <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']" >
                 <Submenu name="1">
                   <template slot="title">
                     <Icon type="ios-navigate"></Icon>
-                    items
+                    Hip-Hop in Ch
                   </template>
-                  <MenuItem name="1-1">Option 1</MenuItem>
-                  <MenuItem name="1-2">Option 2</MenuItem>
-                  <MenuItem name="1-3">Option 3</MenuItem>
+                  <MenuItem name="1-1">视频专区</MenuItem>
+                  <MenuItem name="1-2">爆炸事件</MenuItem>
+                  <router-link to="/comments" >
+                    <MenuItem name="1-3" > 
+                    <Icon type="ios-brush"></Icon>
+                    评论角落
+                    </MenuItem>
+                  </router-link>
                 </Submenu>
                 <Submenu name="2">
                   <template slot="title">
                     <Icon type="ios-keypad"></Icon>
-                    items
+                    这就是灌篮
                   </template>
                   <MenuItem name="2-1">Option 1</MenuItem>
                   <MenuItem name="2-2">Option 2</MenuItem>
@@ -129,7 +150,7 @@
                 <Submenu name="3">
                   <template slot="title">
                     <Icon type="ios-analytics"></Icon>
-                    items
+                    items3
                   </template>
                   <MenuItem name="3-1">Option 1</MenuItem>
                   <MenuItem name="3-2">Option 2</MenuItem>
@@ -140,32 +161,73 @@
             <Content id="content" :style="{padding: '30px', minHeight: '280px'}">
               <router-view></router-view>
             </Content>
+            <!-- 锚点 -->
+            <!-- <div id="leftSider" v-if="sshow!=0">
+              <Anchor show-ink>
+                <AnchorLink href="#basic_usage" title="Basic Usage" />
+                  <AnchorLink href="#static_position" title="Static Position" />
+                  <AnchorLink href="#API" title="API">
+                  <AnchorLink href="#Anchor_props" title="Anchor props" />
+                  <AnchorLink href="#Anchor_events" title="Anchor events" />
+                  <AnchorLink href="#AnchorLink_props" title="AnchorLink props" />
+                </AnchorLink>
+              </Anchor>
+            </div> -->
+            <BackTop></BackTop>
           </Layout>
         </Content>
       </Layout>
-      <Footer id="bgcolor" class="layout-footer-center">2011-2016 &copy; TalkingData</Footer>
+    
     </Layout>
-  </div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      value2:0
+      sshow:1
     }
   },
+  mounted(){
+    this.sshowFuc()
+  },
   methods: {
+
     home() {
-      this.$router.replace('/')
+      this.$router.push({ name: 'comments' })
     },
     login() {
       this.$router.replace('/login')
-
-    },
+},
     register() {
       this.$router.replace('/register')
+    },
+    logout() {
+      this.$store.dispatch('logout').then(() => {
+        this.$router.replace('/')
+      })
+     
+    },
+    sshowFuc(){
+      if(this.$route.path=='/login' ||this.$route.path=='/register'){
+        this.sshow=0
+      }
     }
-  }
+  },
+  watch:{
+    '$route'(to ,from){
+      if( to.path=='/'){
+        this.sshow=1
+      }else if(to.path=='/login' || to.path=='/register'){
+        this.sshow=0
+      }
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user
+    }
+  },
+
 }
 </script>
