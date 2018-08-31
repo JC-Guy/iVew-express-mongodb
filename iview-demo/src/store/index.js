@@ -9,9 +9,14 @@ const store = new Vuex.Store({
     doneOrNot: 1,
     comments:undefined
   },
+  getters:{
+    
+  },
   mutations: {
+    //在login方法里加localStorage，登陆成功就保存信息
     login(state, payload) {
       state.user = payload
+      // localStorage.setItem('user',JSON.stringify(payload))
     },
     logout(state) {
       state.user = undefined
@@ -26,6 +31,7 @@ const store = new Vuex.Store({
   actions: {
     login(context, payload) {
       context.commit('login', payload)
+   
     },
     logout(context) {
       context.commit('logout')

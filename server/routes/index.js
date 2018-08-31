@@ -5,7 +5,7 @@ var User = require('../models/user')
 //login
 router.post('/login', function (req, res) {
   if (!req.body.username || !req.body.password) {
-    res.send('用户名或密码不能为空')
+    res.send('后端：用户名或密码不能为空')
   } else {
     User.findOne({
       username: req.body.username,

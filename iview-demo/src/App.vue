@@ -82,13 +82,28 @@
               Item 5
             </Menu-Item>
             <span v-if="user!=null && this.$store.state.doneOrNot==1">
-              <!-- vuex只能管理components下的组件，不能管理App.vue -->
+        
               <!-- welcome {{user.username}} -->
               <Button @click="logout" shape="circle">注销</Button>
+           <Submenu name="6">
+              <template slot="title">
+                <Icon type="ios-body" /> {{$store.state.user.username}}
+              </template>
+              <MenuGroup title="使用">
+                <MenuItem name="3-1">新增和启动</MenuItem>
+                <MenuItem name="3-2">活跃分析</MenuItem>
+                <MenuItem name="3-3">时段分析</MenuItem>
+              </MenuGroup>
+              <MenuGroup title="留存">
+                <MenuItem name="3-4">用户留存</MenuItem>
+                <MenuItem name="3-5">流失用户</MenuItem>
+              </MenuGroup>
+            </Submenu>
             </span>
             <span v-else>
               <Button @click="login">登陆</Button>
               <Button @click="register">注册</Button>
+              
             </span>
           </div>
         </Menu>
@@ -106,12 +121,12 @@
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/1.jpg" alt="轮播第三张图">
+            <img src="./assets/2.jpg" alt="轮播第三张图">
           </div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/1.jpg" alt="轮播第四张图">
+            <img src="./assets/3.jpg" alt="轮播第四张图">
           </div>
         </CarouselItem>
       </Carousel>
@@ -135,7 +150,7 @@
                   <router-link to="/comments" >
                     <MenuItem name="1-3" > 
                     <Icon type="ios-brush"></Icon>
-                    评论角落
+                    帖子角落
                     </MenuItem>
                   </router-link>
                 </Submenu>
@@ -188,7 +203,9 @@ export default {
       sshow:1
     }
   },
+
   mounted(){
+    this.loginOrNot()
     this.sshowFuc()
   },
   methods: {
@@ -198,7 +215,7 @@ export default {
     },
     login() {
       this.$router.replace('/login')
-},
+    },
     register() {
       this.$router.replace('/register')
     },
@@ -206,11 +223,22 @@ export default {
       this.$store.dispatch('logout').then(() => {
         this.$router.replace('/')
       })
-     
     },
     sshowFuc(){
       if(this.$route.path=='/login' ||this.$route.path=='/register'){
         this.sshow=0
+      }
+    },
+    loginOrNot(){
+      if(this.$store.state.doneOrNot){
+        console.log('登陆后  '+this.$store.state.doneOrNot)
+        this.$store.state.user=JSON.parse(sessionStorage.getItem('user'))
+      // this.$store.state.user= JSON.parse(JSON.stringify(sessionStorage.getItem('user')) ) 
+        console.log('user is  ' +this.$store.state.user)
+        console.log('username is  ' +this.$store.state.user.username)
+      }else{
+        console.log('登陆前'+this.$store.state.doneOrNot)
+        console.log('登陆前'+this.$store.state.user.username)
       }
     }
   },
@@ -221,7 +249,8 @@ export default {
       }else if(to.path=='/login' || to.path=='/register'){
         this.sshow=0
       }
-    }
+    },
+ 
   },
   computed: {
     user() {

@@ -1,10 +1,15 @@
 <template>
   <div>
-    <card title="帖子(样式需要改一下，从后段获取数据是没问题了)" icon="ios-book">
+    <card title="帖子(username如何获得)" icon="ios-book">
       <section v-for="item in list" :key="item._id">
+        user:
+        <span>{{item.cUsername}}</span><br /> 
         title:
-        <span>{{item.title}}</span><br /> content:
-        <span>{{item.content}}</span>
+        <span>{{item.title}}</span><br /> 
+        content:
+        <span>{{item.content}}</span><br /> 
+        time:
+        <span>{{item.time}}</span>
         <divider />
       </section>
     </card>
@@ -19,6 +24,7 @@
           内容 ：
           <Input type="textarea" v-model="comments.content" placeholder="content"></Input>
         </FormItem>
+
         <FormItem>
           <Button type="success" ghost @click="submitt">发布</Button>
           <Button type="primary" ghost @click="goback">返回</Button>
@@ -35,18 +41,21 @@ export default {
       list: [],
       user: {},
       rule: {
+        cUsername:'',
         title: [
           { required: true, message: '标题不能为空', trigger: 'blur' }
         ],
         content: [
           { required: true, message: '评论内容不能为空', trigger: 'blur' }
-        ]
+        ],
+        time: ''
       }
     }
   },
   mounted() {
-    this.getComments()
     this.user = this.$store.state.user
+    this.getComments()
+
   },
 
   methods: {
@@ -57,7 +66,6 @@ export default {
           content: '请先登陆，再评论'
         });
       } else {
-        // console.log(this.user.username)可以获得用户名
         this.$refs.commentsForm.validate((value) => {
           if (value) {
             this.$http.post('/api/comments', this.comments).then((res) => {
@@ -67,6 +75,8 @@ export default {
                     title: '发布成功',
                     duration: 2
                   })
+                  // location.reload()
+                  // console.log('this.username is '+this.user.username)
                   console.log("评论发表成功")
                   console.log(res.data)
                 })
@@ -87,7 +97,8 @@ export default {
       }).catch(err => {
         console.log(err)
       })
-    }
+    },
+
   }
 }
 </script>
