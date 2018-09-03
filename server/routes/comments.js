@@ -5,11 +5,12 @@ var Commentt = require('../models/comments')
 //自己写评论
 router.post('/comments', function (req, res) {
   var a = new Date().toLocaleString()
-console.log(req.body)
- //现在问题是cUsername怎么获得
-console.log(req.body.username)
+  var b = 'sah'
+  // console.log(req.body)
+  //  //现在问题是cUsername怎么获得
+  // console.log(req.body.username) //undefined
   Commentt.create({
-    cUsername:req.body.username,
+    cUsername: b,
     title: req.body.title,
     content: req.body.content,
     time: a
@@ -26,4 +27,13 @@ router.get('/comments', (req, res) => {
     console.log(err)
   })
 })
+//删除评论
+router.delete('/comments', (req, res) => {
+  Commentt.remove({_id:req.query.id}).then(doc => {
+    res.json(doc)
+  }).catch(err=>{
+    console.log(err)
+  })
+})
+
 module.exports = router

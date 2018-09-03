@@ -174,7 +174,7 @@
             </Sider>
             <!-- 内容 -->
             <Content id="content" :style="{padding: '30px', minHeight: '280px'}">
-              <router-view></router-view>
+              <router-view v-if="isRouterAlive"></router-view>
             </Content>
             <!-- 锚点 -->
             <!-- <div id="leftSider" v-if="sshow!=0">
@@ -198,18 +198,34 @@
 </template>
 <script>
 export default {
+  provide(){
+    return {
+      reload:this.reload
+    }
+  },
   data() {
     return {
-      sshow:1
+      sshow:1,
+      isRouterAlive:true
     }
   },
 
   mounted(){
-    this.loginOrNot()
+    try{
+ this.loginOrNot()
     this.sshowFuc()
+    }catch(err){
+      throw err
+    }
+   
   },
   methods: {
-
+    reload(){
+      this.isRouterAlive=false
+      this.$nextTick(function(){
+        this.isRouterAlive=true
+      })
+    },
     home() {
       this.$router.push({ name: 'comments' })
     },
@@ -221,6 +237,7 @@ export default {
     },
     logout() {
       this.$store.dispatch('logout').then(() => {
+        this.$store.state.doneOrNot=0
         this.$router.replace('/')
       })
     },
@@ -231,14 +248,14 @@ export default {
     },
     loginOrNot(){
       if(this.$store.state.doneOrNot){
-        console.log('登陆后  '+this.$store.state.doneOrNot)
+        // console.log('登陆后  '+this.$store.state.doneOrNot)
         this.$store.state.user=JSON.parse(sessionStorage.getItem('user'))
       // this.$store.state.user= JSON.parse(JSON.stringify(sessionStorage.getItem('user')) ) 
-        console.log('user is  ' +this.$store.state.user)
-        console.log('username is  ' +this.$store.state.user.username)
+        // console.log('user is  ' +this.$store.state.user)
+        // console.log('username is  ' +this.$store.state.user.username)
       }else{
-        console.log('登陆前'+this.$store.state.doneOrNot)
-        console.log('登陆前'+this.$store.state.user.username)
+        // console.log('登陆前'+this.$store.state.doneOrNot)
+        // console.log('登陆前'+this.$store.state.user.username)
       }
     }
   },
