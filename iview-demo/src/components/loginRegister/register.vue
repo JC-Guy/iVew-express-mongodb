@@ -44,7 +44,14 @@ export default {
     }
   },
   methods: {
-
+    //清除所有cookie
+    clearAllCookie() {
+      var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+      if (keys) {
+        for (var i = keys.length; i--;)
+          document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
+      }
+    },
     register() {
       this.$refs.registerForm.validate((value) => {
         if (value) {
@@ -88,6 +95,7 @@ export default {
                       this.$store.state.doneOrNot = 1
                       console.log("前端:注册成功")
                       console.log(res.data)
+                      this.clearAllCookie()
                     }
                   }
                 }

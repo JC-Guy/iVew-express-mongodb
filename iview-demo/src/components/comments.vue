@@ -1,8 +1,25 @@
+<style>
+.cardstyle1{
+  width: 53%;
+  display: inline-block;
+  bottom: 20px;
+}
+.cardstyle2{
+  width: 45%;
+  float:right;
+  bottom: 20px;
+}
+
+.buttonstyle{
+  float: right;
+}
+</style>
+
 <template>
   <div>
-    <!-- <h1>{{$store.state.user.username}}</h1> -->
-    <card title="帖子(username解决不了，过几天再看把)" icon="ios-book">
-      <section v-for="item in list" :key="item._id">
+<!-- 左侧： 全部帖子 -->
+    <card title="全部帖子" icon="ios-book" class="cardstyle1">
+      <section v-for="item in list_total" :key="item._id">
         id:
         <span>{{item._id}}</span><br /> user:
         <span>{{item.cUsername}}</span><br />
@@ -11,15 +28,31 @@
         <span>{{item.title}}</span><br /> content:
         <span>{{item.content}}</span><br /> time:
         <span>{{item.time}}</span>
-        <Button type="error" ghost v-if="$store.state.doneOrNot" @click="delComments(item._id)">delete</Button>
-        <Button type="primary" ghost v-if="$store.state.doneOrNot" @click="recall">recall</Button>
+        <!-- <Button type="error" ghost v-if="$store.state.doneOrNot" @click="delComments(item._id)">delete</Button>
+        <Button type="primary" ghost v-if="$store.state.doneOrNot" @click="recall">recall</Button> -->
         <divider />
       </section>
-      <!-- 回复先不做了，不知道怎么做 -->
-      
     </card>
-    <div style="height:20px"></div>
-    <card title="自己写个帖子" icon="ios-brush" v-if="!isRecall">
+    <!-- 右侧：自己的帖子 -->
+    <card title="自己的帖子" icon="ios-book" class="cardstyle2">
+      <section v-for="item in list_own" :key="item._id">
+        id:
+        <span>{{item._id}}</span><br /> user:
+        <span>{{item.cUsername}}</span><br />
+        <!-- <span>{{user.cUsername}}</span><br /> -->
+        title:
+        <span>{{item.title}}</span><br /> content:
+        <span>{{item.content}}</span><br /> time:
+        <span>{{item.time}}</span>
+        <div class="buttonstyle">
+          <Button type="error"  size="small" ghost v-if="$store.state.doneOrNot" @click="delComments(item._id)">delete</Button>
+          <Button type="primary" size="small"  ghost v-if="$store.state.doneOrNot" @click="recall">recall</Button>
+        </div>
+        <divider />
+      </section>
+    </card>
+
+    <card title="自己写个帖子" icon="ios-brush" v-if="!isRecall" class="cardstyle3">
       <Form ref="commentsForm" :model="comments" :rules="rules">
         <FormItem  prop="title" >
           标题 ：
@@ -45,6 +78,9 @@
         </FormItem>
       </Form>
     </card>
+
+
+
   </div>
 </template>
 <script>
@@ -55,7 +91,8 @@ export default {
       isRecall:false,//点击recall
       pubRecall:true,//点击回复
       comments: {},
-      list: [],
+      list_total: [],
+      list_own:[],
       user: {},
       rules: {
         title: [
@@ -71,12 +108,11 @@ export default {
     }
   },
   mounted() {
-    // this.user = JSON.parse(sessionStorage.getItem('user'))
-    // this.user=this.$store.state.user
-    // console.log(this.$store.state.user.username)
-    this.getComments()
-
-  },
+    this.user = JSON.parse(sessionStorage.getItem('user'))
+    // console.log(this.user.username)
+    this.getTotalComments()
+    this.getOwnComments()
+    },
 
   methods: {
     submitt() {
@@ -88,17 +124,16 @@ export default {
       } else {
         this.$refs.commentsForm.validate((value) => {
           if (value) {
-            this.$http.post('/api/comments', this.comments).then((res) => {
+            this.$http.post('/api/comments', this.comments,{params:{username:this.user.username}}).then((res) => {
               if (this.comments) {
                 this.$store.dispatch('submitt', this.comments).then(() => {
                   this.$Notice.success({
                     title: '发布成功',
                     duration: 2
                   })
-                  // location.reload()
                   this.reload()
-                  console.log("评论发表成功")
-                  console.log(res.data)
+                  // console.log("评论发表成功")
+                  // console.log(res.data)
                 })
               }
             })
@@ -112,12 +147,25 @@ export default {
     gobackk(){
       this.reload()
     },
-    getComments() {
+    getTotalComments() {
       this.$http.get('/api/comments').then((res) => {
-        // console.log(res.data[2].title)
-        // console.log('list is '+JSON.stringify( res.data))
-        this.list = res.data
+        // console.log('res.date is '+JSON.stringify( res.data))
+        this.list_total = res.data
+        
       }).catch(err => {
+        console.log(err)
+      })
+    },
+    getOwnComments(){
+      this.$http.get('/api/comments').then(res=>{
+        for(var i=0;i<res.data.length;i++){
+          if(res.data[i].cUsername==this.user.username){
+            this.list_own.push(res.data[i])
+          }
+        }
+      // console.log(this.list_own)
+       
+      }).catch(err=>{
         console.log(err)
       })
     },
