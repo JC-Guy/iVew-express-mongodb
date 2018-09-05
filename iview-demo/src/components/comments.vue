@@ -1,60 +1,102 @@
 <style>
-.cardstyle1{
+.cardstyle1 {
   width: 53%;
   display: inline-block;
   bottom: 20px;
 }
-.cardstyle2{
+.cardstyle2 {
   width: 45%;
-  float:right;
+  float: right;
+  display: inline-block;
   bottom: 20px;
 }
+.cardstyle3 {
+}
 
-.buttonstyle{
+.buttonstyle {
   float: right;
+}
+#tieziCard:hover{
+   background-color: #2d8cf0;
+   color: white;
+}
+#recallCard:hover{
+  background-color: #ff9900;
+  color: white;
+}
+#bbb:hover{
+  color: white;
 }
 </style>
 
 <template>
   <div>
-<!-- 左侧： 全部帖子 -->
+    <!-- 左侧： 全部帖子 -->
     <card title="全部帖子" icon="ios-book" class="cardstyle1">
       <section v-for="item in list_total" :key="item._id">
-        id:
-        <span>{{item._id}}</span><br /> user:
-        <span>{{item.cUsername}}</span><br />
-        <!-- <span>{{user.cUsername}}</span><br /> -->
-        title:
+        <card id="tieziCard">
+            id: <span>{{item._id}}</span><br /> user:
+        <span>{{item.cUsername}}</span><br /> title:
         <span>{{item.title}}</span><br /> content:
         <span>{{item.content}}</span><br /> time:
         <span>{{item.time}}</span>
-        <!-- <Button type="error" ghost v-if="$store.state.doneOrNot" @click="delComments(item._id)">delete</Button>
-        <Button type="primary" ghost v-if="$store.state.doneOrNot" @click="recall">recall</Button> -->
+        <div class="buttonstyle">
+          <Button id="bbb" type="primary" size='small' ghost v-if="$store.state.doneOrNot" @click="recall ,modal1 = true,getId(item._id)">recall</Button>
+        </div> 
+        </card>
+        <!-- 回复区 -->
+        <Divider orientation="left" >回复TA</Divider>
+          <section>
+            <div  v-for="sub in item.subItem" :key="sub._id">
+              <card id="recallCard">
+                user:{{sub.cUsername}}<br />
+                content:{{sub.content}}<br /> 
+                time:{{sub.time}}
+              </card>
+              <div style="height:5px;"></div>
+            </div>
+          </section>
         <divider />
       </section>
     </card>
     <!-- 右侧：自己的帖子 -->
     <card title="自己的帖子" icon="ios-book" class="cardstyle2">
       <section v-for="item in list_own" :key="item._id">
-        id:
-        <span>{{item._id}}</span><br /> user:
-        <span>{{item.cUsername}}</span><br />
-        <!-- <span>{{user.cUsername}}</span><br /> -->
-        title:
-        <span>{{item.title}}</span><br /> content:
-        <span>{{item.content}}</span><br /> time:
-        <span>{{item.time}}</span>
-        <div class="buttonstyle">
-          <Button type="error"  size="small" ghost v-if="$store.state.doneOrNot" @click="delComments(item._id)">delete</Button>
-          <Button type="primary" size="small"  ghost v-if="$store.state.doneOrNot" @click="recall">recall</Button>
-        </div>
+        <card id="tieziCard">
+          id:
+          <span>{{item._id}}</span><br /> user:
+          <span>{{item.cUsername}}</span><br />
+          <!-- <span>{{user.cUsername}}</span><br /> -->
+          title:
+          <span>{{item.title}}</span><br /> content:
+          <span>{{item.content}}</span><br /> time:
+          <span>{{item.time}}</span>
+          <div class="buttonstyle">
+            <Button type="error" size="small" ghost v-if="$store.state.doneOrNot" @click="delComments(item._id)">delete</Button>
+            <Button type="primary" size="small" ghost v-if="$store.state.doneOrNot" @click="recall ,modal1 = true,getId(item._id)">recall</Button>
+          </div>
+        </card>
+        <!-- 回复区 -->
+        <Divider orientation="left" >TA回复</Divider>
+          <section>
+            <div  v-for="sub in item.subItem" :key="sub._id">
+              <card id="recallCard">
+                user:{{sub.cUsername}}<br />
+                content:{{sub.content}}<br /> 
+                time:{{sub.time}}
+              </card>
+              <div style="height:5px;"></div>
+            </div>
+          </section>
+        <divider />
+      </section>
         <divider />
       </section>
     </card>
-
-    <card title="自己写个帖子" icon="ios-brush" v-if="!isRecall" class="cardstyle3">
+    <!-- 发表 -->
+    <card title="自己写个帖子" icon="ios-brush" class="cardstyle3">
       <Form ref="commentsForm" :model="comments" :rules="rules">
-        <FormItem  prop="title" >
+        <FormItem prop="title">
           标题 ：
           <Input type="text" v-model="comments.title" placeholder="title"></Input>
         </FormItem>
@@ -67,20 +109,16 @@
         </FormItem>
       </Form>
     </card>
-    <card title="回复" icon="ios-brush" v-if="isRecall">
-      <Form ref="commentsForm" :model="comments" :rules="rules">
+  <!-- 回复   -->
+    <Modal v-model="modal1" title="回复" @on-ok="recall">
+      <Form ref="recallForm" :model="comments" :rules="rules">
         <FormItem prop="content">
           内容 ：
           <Input type="textarea" v-model="comments.content" placeholder="content"></Input>
-        </FormItem>
-        <Button type="success" ghost @click="submitt">回复</Button>
-        <Button type="primary" ghost @click="gobackk">返回</Button>
+       
         </FormItem>
       </Form>
-    </card>
-
-
-
+    </Modal>
   </div>
 </template>
 <script>
@@ -88,11 +126,13 @@ export default {
   inject: ["reload"],
   data() {
     return {
-      isRecall:false,//点击recall
-      pubRecall:true,//点击回复
+      tieziId:'',
+      modal1: false,//对话框回复
+   
+      doRecall: false,//点击回复
       comments: {},
       list_total: [],
-      list_own:[],
+      list_own: [],
       user: {},
       rules: {
         title: [
@@ -110,13 +150,14 @@ export default {
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem('user'))
     // console.log(this.user.username)
+    // console.log(this.doRecall)
     this.getTotalComments()
     this.getOwnComments()
-    },
+
+  },
 
   methods: {
     submitt() {
-      //首先看登陆了没，没登陆不能发表
       if (!this.user && this.$store.state.doneOrNot == 0) {
         this.$Message.info({
           content: '请先登陆，再评论'
@@ -124,7 +165,7 @@ export default {
       } else {
         this.$refs.commentsForm.validate((value) => {
           if (value) {
-            this.$http.post('/api/comments', this.comments,{params:{username:this.user.username}}).then((res) => {
+            this.$http.post('/api/comments', this.comments, { params: { username: this.user.username } }).then((res) => {
               if (this.comments) {
                 this.$store.dispatch('submitt', this.comments).then(() => {
                   this.$Notice.success({
@@ -144,28 +185,28 @@ export default {
     goback() {
       this.$router.replace('/')
     },
-    gobackk(){
-      this.reload()
-    },
+    // gobackk() {
+    //   this.reload()
+    // },
     getTotalComments() {
       this.$http.get('/api/comments').then((res) => {
         // console.log('res.date is '+JSON.stringify( res.data))
         this.list_total = res.data
-        
+
       }).catch(err => {
         console.log(err)
       })
     },
-    getOwnComments(){
-      this.$http.get('/api/comments').then(res=>{
-        for(var i=0;i<res.data.length;i++){
-          if(res.data[i].cUsername==this.user.username){
+    getOwnComments() {
+      this.$http.get('/api/comments').then(res => {
+        for (var i = 0; i < res.data.length; i++) {
+          if (res.data[i].cUsername == this.user.username) {
             this.list_own.push(res.data[i])
           }
         }
-      // console.log(this.list_own)
-       
-      }).catch(err=>{
+        // console.log(this.list_own)
+
+      }).catch(err => {
         console.log(err)
       })
     },
@@ -186,12 +227,39 @@ export default {
     },
     //回复评论
     recall() {
-      this.isRecall=true
-
+      this.doRecall=true
+        this.$refs.recallForm.validate((value) => {
+          if (value) {
+            console.log(value)
+            this.$http.post('/api/comments', this.comments, { params: { doRecall: this.doRecall,id:this.tieziId,username: this.user.username} }).then((res) => {
+              if (this.comments) {
+                this.$store.dispatch('submitt', this.comments).then(() => {
+                  this.$Notice.success({
+                    title: '回复成功',
+                    duration: 2
+                  })
+                  this.reload() 
+                  console.log(res.data)
+                })
+              }
+            })
+          }else{
+            this.$Notice.error({
+              title: '评论不能为空',
+              duration: 2
+            })
+            return false
+          }
+        })
+    },
+    //得到当前帖子的_id
+    getId(index){
+      console.log(index)
+      this.tieziId=index
     }
   },
-    
-    computed: {
+
+  computed: {
     userr() {
       return this.$store.state.user
     }

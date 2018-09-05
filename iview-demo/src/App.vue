@@ -139,7 +139,7 @@
         <Content id="content_container" :style="{padding: '24px 0', minHeight: '280px'}">
           <Layout>
             <Sider hide-trigger :style="{background: '#fff'}" v-if="sshow!=0">
-              <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']" >
+              <Menu active-name="1-3" theme="light" width="auto" :open-names="['1']" >
                 <Submenu name="1">
                   <template slot="title">
                     <Icon type="ios-navigate"></Icon>
