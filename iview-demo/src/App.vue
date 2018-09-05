@@ -111,7 +111,7 @@
       <Carousel autoplay loop :autoplay-speed="4000" :height="400" v-if="sshow!=0">
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/1.jpg" alt="轮播第一张图">
+            <img src="./assets/66.png" alt="轮播第一张图">
           </div>
         </CarouselItem>
         <CarouselItem>
@@ -139,7 +139,11 @@
         <Content id="content_container" :style="{padding: '24px 0', minHeight: '280px'}">
           <Layout>
             <Sider hide-trigger :style="{background: '#fff'}" v-if="sshow!=0">
-              <Menu active-name="1-3" theme="light" width="auto" :open-names="['1']" >
+              <Menu active-name="0" theme="light" width="auto" :open-names="['0']" >
+                <MenuItem name="0" to="/">
+                  <Icon type="ios-home"></Icon>
+                  首页
+                </MenuItem>
                 <Submenu name="1">
                   <template slot="title">
                     <Icon type="ios-navigate"></Icon>
@@ -147,12 +151,12 @@
                   </template>
                   <MenuItem name="1-1">视频专区</MenuItem>
                   <MenuItem name="1-2">爆炸事件</MenuItem>
-                  <router-link to="/comments" >
-                    <MenuItem name="1-3" > 
+                 
+                    <MenuItem name="1-3" to="/comments"> 
                     <Icon type="ios-brush"></Icon>
                     帖子角落
                     </MenuItem>
-                  </router-link>
+                  
                 </Submenu>
                 <Submenu name="2">
                   <template slot="title">
@@ -226,9 +230,7 @@ export default {
         this.isRouterAlive=true
       })
     },
-    home() {
-      this.$router.push({ name: 'comments' })
-    },
+  
     login() {
       this.$router.replace('/login')
     },
@@ -238,6 +240,8 @@ export default {
     logout() {
       this.$store.dispatch('logout').then(() => {
         this.$store.state.doneOrNot=0
+        sessionStorage.clear();
+        // console.log(JSON.parse(JSON.stringify(sessionStorage.getItem('user')) ))
         this.$router.replace('/')
       })
     },
