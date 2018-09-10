@@ -1,13 +1,10 @@
 <style>
 .cardstyle1 {
-  width: 53%;
-  display: inline-block;
+  width: 95%;
   bottom: 20px;
 }
 .cardstyle2 {
-  width: 45%;
-  float: right;
-  display: inline-block;
+  width: 100%;
   bottom: 20px;
 }
 .cardstyle3 {
@@ -31,7 +28,10 @@
 
 <template>
   <div>
-    <!-- 左侧： 全部帖子 -->
+    <Row>
+      <!-- 左侧 -->
+      <Col span="14">
+          <!-- 左侧： 全部帖子 -->
     <card title="全部帖子(在做一个分页，滚动条滑动加载，不要用页码)" icon="ios-book" class="cardstyle1">
       <section v-for="item in list_total" :key="item._id">
         <card id="tieziCard">
@@ -59,8 +59,10 @@
         </collapse>
       </section>
     </card>
-    <!-- 右侧：自己的帖子 -->
-    <card title="自己的帖子(register设置cookie,抽离出公共cookie方法)" icon="ios-book" class="cardstyle2">
+  </Col>
+<!-- 右侧 -->
+  <Col span="10">
+    <card  title="自己的帖子(register设置cookie,抽离出公共cookie方法)" icon="ios-book" class="cardstyle2">
       <p v-if="!this.user" style="text-align:center">登录后即可查看</p>
       <p v-if="this.ownListLength==0 && this.user" style="text-align:center">还没有写帖子哦，快去发表吧</p>
       <section v-for="item in list_own" :key="item._id">
@@ -111,6 +113,10 @@
         </FormItem>
       </Form>
     </card>
+  </Col>
+</Row>
+
+
   <!-- 回复   -->
     <Modal v-model="modal1" title="回复" @on-ok="recall">
       <Form ref="recallForm" :model="comments" :rules="rules">

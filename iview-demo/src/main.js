@@ -7,6 +7,8 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import axios from 'axios'
 import store from './store/index'
+import AudioRecorder from 'vue-audio-recorder'
+Vue.use(AudioRecorder)
 
 Vue.config.productionTip = false
 Vue.use(iView)

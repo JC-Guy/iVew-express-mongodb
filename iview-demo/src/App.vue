@@ -35,14 +35,15 @@
 #content_container {
   -webkit-border-radius: 6px;
   background-color: #fff;
+  
 }
 #content {
   background-color: #fff;
 }
-#leftSider{
-  width: 240px;
-  background-color: #fff;
+#audioPlayer{
+  float: right;
 }
+
 </style>
 <template>
   <div class="layout" >
@@ -103,8 +104,16 @@
             <span v-else>
               <Button @click="login">登陆</Button>
               <Button @click="register">注册</Button>
-              
             </span>
+            <!-- 加一个全局的音乐播放器  -->
+<Affix :offset-top="100" >
+  <div id="audioPlayer">
+    <div  style="text-align:center">
+    <p v-if="this.changeSong==1">{{audioNamee}}--{{singerr}}</p> <p v-if="this.changeSong==0">止战之殇--周杰伦</p>
+    <audio-player ref="audioPlayer"  src="http://other.web.ra01.sycdn.kuwo.cn/resource/n1/128/7/30/3920959009.mp3"/>
+  </div>
+  </div>
+</Affix>
           </div>
         </Menu>
       </Header>
@@ -137,11 +146,13 @@
           <BreadcrumbItem>Layout</BreadcrumbItem>
         </Breadcrumb>
         <Content id="content_container" :style="{padding: '24px 0', minHeight: '280px'}">
+          <Card> 
           <Layout>
+            <!-- 左侧sidebar -->
             <Sider hide-trigger :style="{background: '#fff'}" v-if="sshow!=0">
               <Menu active-name="0" theme="light" width="auto" :open-names="['0']" >
                 <MenuItem name="0" to="/">
-                  <Icon type="ios-home"></Icon>
+                  <Icon type="md-home"></Icon>
                   首页
                 </MenuItem>
                 <Submenu name="1">
@@ -149,14 +160,18 @@
                     <Icon type="ios-navigate"></Icon>
                     Hip-Hop in Ch
                   </template>
-                  <MenuItem name="1-1">视频专区</MenuItem>
-                  <MenuItem name="1-2">爆炸事件</MenuItem>
-                 
-                    <MenuItem name="1-3" to="/comments"> 
+                    <MenuItem name="1-1" to="/videoArea">
+                      <Icon type="md-videocam"></Icon>
+                      视频专区
+                    </MenuItem>
+                  <MenuItem name="1-2" to="/audioArea">
+                  <Icon type="md-musical-notes"></Icon>
+                  音悦享受
+                  </MenuItem>
+                  <MenuItem name="1-3" to="/comments"> 
                     <Icon type="ios-brush"></Icon>
                     帖子角落
-                    </MenuItem>
-                  
+                  </MenuItem>
                 </Submenu>
                 <Submenu name="2">
                   <template slot="title">
@@ -176,27 +191,15 @@
                 </Submenu>
               </Menu>
             </Sider>
-            <!-- 内容 -->
+            <!-- 右侧内容 -->
             <Content id="content" :style="{padding: '30px', minHeight: '280px'}">
               <router-view v-if="isRouterAlive"></router-view>
             </Content>
-            <!-- 锚点 -->
-            <!-- <div id="leftSider" v-if="sshow!=0">
-              <Anchor show-ink>
-                <AnchorLink href="#basic_usage" title="Basic Usage" />
-                  <AnchorLink href="#static_position" title="Static Position" />
-                  <AnchorLink href="#API" title="API">
-                  <AnchorLink href="#Anchor_props" title="Anchor props" />
-                  <AnchorLink href="#Anchor_events" title="Anchor events" />
-                  <AnchorLink href="#AnchorLink_props" title="AnchorLink props" />
-                </AnchorLink>
-              </Anchor>
-            </div> -->
-            <BackTop></BackTop>
           </Layout>
+          </Card>
+          <BackTop></BackTop>
         </Content>
       </Layout>
-    
     </Layout>
   </div>
 </template>
@@ -210,11 +213,16 @@ export default {
   data() {
     return {
       sshow:1,
-      isRouterAlive:true
+      isRouterAlive:true,
+      audioNamee:'',
+      singerr:'',
+      changeSong:0//是否切换歌曲，在watch里监听
     }
   },
 
   mounted(){
+
+  // console.log('mounted里面的sURL是：  '+this.$store.state.songURL)
     try{
  this.loginOrNot()
     this.sshowFuc()
@@ -271,12 +279,26 @@ export default {
         this.sshow=0
       }
     },
- 
+    song:function(val){
+      this.changeSong=1
+      this.$refs.audioPlayer.player.src=val.url
+      this.audioNamee=val.audioName
+      this.singerr=val.singer
+    
+      // console.log('watch里面  '+this.$refs.audioPlayer.player.src)
+      // console.log('val是   '+JSON.stringify(val) )
+      // console.log(val.singer)
+      // console.log(val.audioName)
+    }
   },
   computed: {
     user() {
       return this.$store.state.user
-    }
+    },
+    song(){
+      return this.$store.state.song
+      }
+
   },
 
 }

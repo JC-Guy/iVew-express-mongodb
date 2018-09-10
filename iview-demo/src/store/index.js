@@ -7,7 +7,8 @@ const store = new Vuex.Store({
   state: {
     user: undefined,
     doneOrNot: 1,
-    comments:undefined
+    comments:undefined,
+    song:undefined
   },
   getters:{
     

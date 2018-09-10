@@ -7,7 +7,7 @@ var bodyparser= require('body-parser');
 var mongoose =require('mongoose')
 var indexRouter = require('./routes/index');
 var commentsRouter=require('./routes/comments')
-// var goodsRouter = require('./routes/goods');
+var audiosRouter=require('./routes/audios')
 
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
@@ -32,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //路由
 app.use('/api', indexRouter);
 app.use('/api',commentsRouter)
+app.use('/api',audiosRouter)
 // app.use('/api',goodsRouter)
 
 
