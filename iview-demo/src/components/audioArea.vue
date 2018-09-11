@@ -8,31 +8,31 @@ window.location.href="http://www.baidu.com"  在单页打开外部链接
 window.open('http://www.baidu.com','_blank')  在新页面打开外部链接
 window.open('http://localhost:1994/#/comments','_blank') 在单页面打开应用内连接 -->
 <Card style="width:60%">
- <Form ref="formCustom" :model="formCustom"  :label-width="80" style="width:90%">
-        <FormItem label="歌曲名" prop="audioName">
-            <Input type="text" v-model="formCustom.audioName"></Input>
-        </FormItem>
-        <FormItem label="演唱者" prop="singer">
-            <Input type="text" v-model="formCustom.singer"></Input>
-        </FormItem>
-        <FormItem label="发布时间" prop="date">
-            <Input type="text" v-model="formCustom.date" ></Input>
-        </FormItem>
-         <FormItem label="URL" prop="url">
-            <Input type="text" v-model="formCustom.url" ></Input>
-        </FormItem>
-        <FormItem>
-            <Button ghost type="primary" @click="setAudio">upload</Button>
-        </FormItem>
-    </Form>
-    </Card>
+  <Form ref="formCustom" :model="formCustom"  :label-width="80" style="width:90%">
+      <FormItem label="歌曲名" prop="audioName">
+        <Input type="text" v-model="formCustom.audioName"></Input>
+      </FormItem>
+      <FormItem label="演唱者" prop="singer">
+        <Input type="text" v-model="formCustom.singer"></Input>
+      </FormItem>
+      <FormItem label="发布时间" prop="date">
+        <Input type="text" v-model="formCustom.date" ></Input>
+      </FormItem>
+      <FormItem label="URL" prop="url">
+        <Input type="text" v-model="formCustom.url" ></Input>
+      </FormItem>
+      <FormItem>
+      <Button ghost type="primary" @click="setAudio">upload</Button>
+    </FormItem>
+  </Form>
+</Card>
 <div style="height:30px"></div>
 <p>考虑一下，删除功能到底要不要添加，其实如果说只自己用，删除并没有什么用，因为自己用就是
   为了收集歌曲的信息，以后用。
   序号还是获取不了
 </p>
 <!-- @on-row-click="playAudio(indexx)" -->
-  <Table  highlight-row :columns="columns1" :data="data1"></Table>
+  <Table highlight-row :columns="columns1" :data="data1"></Table>
 <!--  -->
   </div>
 </template>
@@ -100,7 +100,6 @@ export default {
     this.getAudio()
   },
   methods: {
-
     getAudio() {
       this.$http.get('/api/audioArea').then((res) => {
         this.data1=res.data 

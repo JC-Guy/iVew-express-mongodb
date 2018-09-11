@@ -44,13 +44,40 @@
   float: right;
 }
 
+.menu-item span{
+  display: inline-block;
+  overflow: hidden;
+  width: 69px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  transition: width .2s ease .2s;
+}
+.menu-item i{
+  transform: translateX(0px);
+  transition: font-size .2s ease, transform .2s ease;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.collapsed-menu span{
+  width: 0px;
+  transition: width .2s ease;
+}
+.collapsed-menu i{
+  transform: translateX(5px);
+  transition: font-size .2s ease .2s, transform .2s ease .2s;
+  vertical-align: middle;
+  font-size: 22px;
+}
+
+
 </style>
 <template>
   <div class="layout" >
     <Layout >
       <Header id="header" v-if="sshow!=0">
         <Menu mode="horizontal" theme="light" width="auto">
-          <a href="/"><img src="./assets/iview.png" alt="iviewLogo" class="layout-logo"></a>
+          <a href="/"><img src="./assets/logo.jpg" alt="iviewLogo" class="layout-logo"></a>
           <div class="layout-nav">
             <Submenu name="1">
               <template slot="title">
@@ -78,13 +105,11 @@
             <Icon type="ios-paper"></Icon>
             Item 4
             </MenuItem>
-            <Menu-Item name="5">
+            <MenuItem name="5">
               <Icon type="ios-paper"></Icon>
               Item 5
-            </Menu-Item>
+            </MenuItem>
             <span v-if="user!=null && this.$store.state.doneOrNot==1">
-        
-              <!-- welcome {{user.username}} -->
               <Button @click="logout" shape="circle">注销</Button>
            <Submenu name="6">
               <template slot="title">
@@ -105,7 +130,7 @@
               <Button @click="login">登陆</Button>
               <Button @click="register">注册</Button>
             </span>
-            <!-- 加一个全局的音乐播放器  -->
+<!-- 加一个全局的音乐播放器  -->
 <Affix :offset-top="100" >
   <div id="audioPlayer">
     <div  style="text-align:center">
@@ -117,40 +142,41 @@
           </div>
         </Menu>
       </Header>
+      <!-- 1550~1660 : 400  -->
       <Carousel autoplay loop :autoplay-speed="4000" :height="400" v-if="sshow!=0">
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/66.png" alt="轮播第一张图">
+            <img src="./assets/ms1.png" alt="轮播第一张图">
           </div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/timg.jpg" alt="轮播第二张图">
+            <img src="./assets/ff1.jpg" alt="轮播第一张图">
           </div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/2.jpg" alt="轮播第三张图">
+         <img src="./assets/ff2.jpg" alt="轮播第一张图">
           </div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel">
-            <img src="./assets/3.jpg" alt="轮播第四张图">
+            <img src="./assets/ms2.jpg" alt="轮播第四张图">
           </div>
         </CarouselItem>
       </Carousel>
       <Layout id="bgcolor" :style="{padding: '0 50px'}">
         <Breadcrumb :style="{margin: '16px 0'}" v-if="sshow!=0">
-          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem to="/">Home</BreadcrumbItem>
           <BreadcrumbItem>Components</BreadcrumbItem>
           <BreadcrumbItem>Layout</BreadcrumbItem>
         </Breadcrumb>
         <Content id="content_container" :style="{padding: '24px 0', minHeight: '280px'}">
           <Card> 
           <Layout>
-            <!-- 左侧sidebar -->
-            <Sider hide-trigger :style="{background: '#fff'}" v-if="sshow!=0">
-              <Menu active-name="0" theme="light" width="auto" :open-names="['0']" >
+<!-- 左侧sidebar -->
+            <Sider breakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed" hide-trigger :style="{background: '#fff'}" v-if="sshow!=0">
+              <Menu active-name="0" theme="light" width="auto" :open-names="['0']" :class="menuitemClasses" >
                 <MenuItem name="0" to="/">
                   <Icon type="md-home"></Icon>
                   首页
@@ -166,17 +192,17 @@
                     </MenuItem>
                   <MenuItem name="1-2" to="/audioArea">
                   <Icon type="md-musical-notes"></Icon>
-                  音悦享受
+                  音乐享受
                   </MenuItem>
                   <MenuItem name="1-3" to="/comments"> 
                     <Icon type="ios-brush"></Icon>
-                    帖子角落
+                    尽情评论
                   </MenuItem>
                 </Submenu>
                 <Submenu name="2">
                   <template slot="title">
                     <Icon type="ios-keypad"></Icon>
-                    这就是灌篮
+                    this is baskt
                   </template>
                   <MenuItem name="2-1">Option 1</MenuItem>
                   <MenuItem name="2-2">Option 2</MenuItem>
@@ -212,6 +238,7 @@ export default {
   },
   data() {
     return {
+      isCollapsed: false,
       sshow:1,
       isRouterAlive:true,
       audioNamee:'',
@@ -297,7 +324,14 @@ export default {
     },
     song(){
       return this.$store.state.song
-      }
+    },
+    menuitemClasses: function () {
+      return [
+        'menu-item',
+        this.isCollapsed ? 'collapsed-menu' : ''
+      ]
+    }
+
 
   },
 

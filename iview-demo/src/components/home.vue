@@ -43,12 +43,13 @@
           <TimelineItem>
             <p class="time">2018.9.10</p>
             <p class="content">
-              今天弄音频，尽快弄好然后想一下下一步做哪一个模块
+              今天弄音频，尽快弄好然后想一下下一步做哪一个模块,获取索引还是没弄好，
+              还是通过点按钮来实现吧
             </p>
           </TimelineItem>
           <TimelineItem>
-            <p class="time">2011年10月5日</p>
-            <p class="content">史蒂夫·乔布斯去世</p>
+            <p class="time">2018.9.11</p>
+            <p class="content">今天做哪一个功能想一想,轮播截图1600*400的，logo自己设计的，狐狸眼</p>
           </TimelineItem>
           <TimelineItem>
             <p class="time">1976年</p>
@@ -76,7 +77,7 @@
 
       <!-- 锚点 -->
       <Col span="6">
-      <div id="leftSider">
+      <!-- <div id="leftSider">
         <Anchor show-ink>
           <AnchorLink href="#2018.9.5" title="2018.9" />
           <AnchorLink href="#static_position" title="2018.10" />
@@ -85,7 +86,7 @@
           <AnchorLink href="#AnchorLink_props" title="2019.1" />
           </AnchorLink>
         </Anchor>
-      </div>
+      </div> -->
       </Col>
     </Row>
 

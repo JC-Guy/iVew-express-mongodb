@@ -13,8 +13,8 @@
       <Card>
         <Col span="7" offset="1">
         <Card>
-          <video  poster="http://www.html5videoplayer.net/poster/toystory.jpg" width="100%" height="auto" controls>
-            <source src="http://www.html5videoplayer.net/videos/toystory.mp4" type="video/mp4" />
+          <video  width="100%" height="auto" controls>
+            <source src="https://jc-guy-oss.oss-cn-shenzhen.aliyuncs.com/video/test/Country-Girl.mp4?Expires=1536655665&OSSAccessKeyId=TMP.AQGVkVyJPn98sfnAAKO7BAM7_CmBrIOLJ_flcj44yRXI42254zwfUIr2KfUbADAtAhQnt9zq2dQOvSfcaM4DYgRMQS5ETAIVAJTTz_edeOIWUigBcNO9izklZ9Aw&Signature=Hbi%2BzN8lMROPUdMJU0vNp0LjnCM%3D" type="video/mp4" />
           </video>
         </Card>
         <div style="height:20px;"></div>
